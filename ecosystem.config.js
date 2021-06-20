@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "Base API",
+      name: "OpenSource API",
       script: "app.js",
       watch: true,
       autorestart: true,
