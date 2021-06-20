@@ -17,6 +17,14 @@ const UserSchema = new mongoose.Schema(
         "Email is invalid.",
       ],
     },
+    gender: {
+      type: String,
+      enum: ['male', 'female'],
+      required: [true, "Gender is invalid."],
+    },
+    birthday: {
+      type: Date,
+    },
     password: {
       type: String,
       required: [true, "Password is invalid."],
