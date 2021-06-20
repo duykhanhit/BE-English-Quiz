@@ -9,9 +9,9 @@ module.exports = {
   // @route   POST   /api/auth/register
   // @access  public
   register: asyncHandle(async (req, res, next) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, gender, birthday } = req.body;
 
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, password, gender, birthday });
 
     sendTokenResponse(user, 201, res);
   }),
@@ -60,6 +60,8 @@ module.exports = {
     const fieldsUpdate = {
       name: req.body.name,
       email: req.body.email,
+      gender: req.body.gender,
+      birthday: req.body.birthday
     };
     const user = await User.findByIdAndUpdate(req.user.id, fieldsUpdate, {
       new: true,
@@ -113,7 +115,7 @@ module.exports = {
     }
 
     user.password = req.body.password;
-    user.resetPasswordToken = undefined;
+    user.resetPasswordCode = undefined;
     user.resetPasswordExpire = undefined;
     await user.save();
 
@@ -151,21 +153,16 @@ module.exports = {
         message,
       });
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         data: "Email sent.",
       });
     } catch (err) {
       console.log(`Error send mail: ${err.message}`);
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         data: err.message,
       });
     }
-
-    res.status(200).json({
-      success: true,
-      resetUrl,
-    });
   }),
 };
