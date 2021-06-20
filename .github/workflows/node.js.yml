@@ -17,7 +17,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd /opensource/BE-English-Quiz
+          cd /home/ubuntu/opensource/BE-English-Quiz
           git pull origin deploy
           yarn
           pm2 restart 0
