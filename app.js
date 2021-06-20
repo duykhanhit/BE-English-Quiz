@@ -5,7 +5,7 @@ if(process.env.NODE_ENV === 'development')
 require("./config/database")();
 
 const express = require("express");
-const color = require("colors");
+require("colors");
 const path = require("path");
 
 const router = require("./routers");
