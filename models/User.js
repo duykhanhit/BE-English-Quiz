@@ -6,35 +6,35 @@ const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Name is invalid."],
+      required: [true, "Name must be required"],
     },
     email: {
       type: String,
-      required: [true, "Email is invalid."],
+      required: [true, "Email must be required"],
       unique: true,
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        "Email is invalid.",
+        "Email must be required",
       ],
     },
     gender: {
       type: String,
-      enum: ['male', 'female'],
-      required: [true, "Gender is invalid."],
+      enum: ["male", "female"],
+      required: [true, "Gender must be required"],
     },
     birthday: {
       type: Date,
     },
     password: {
       type: String,
-      required: [true, "Password is invalid."],
+      required: [true, "Password must be required"],
       minlength: 6,
       select: false,
     },
     resetPasswordCode: {
       type: Number,
       required: false,
-      length: 6
+      length: 6,
     },
     resetPasswordExpire: Date,
   },
