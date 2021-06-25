@@ -11,8 +11,8 @@ module.exports = {
       result_id,
     });
 
-    if (!submitAnswer) {
-      return next(new ErrorResponse(`Cannot find submit answer`, 404));
+    if (submitAnswer.length === 0) {
+      return next(new ErrorResponse(404, `Cannot find submit answer`));
     }
 
     const listAnswerId = submitAnswer.map((value) => value.answer_id);
@@ -24,8 +24,8 @@ module.exports = {
       isCorrect: true,
     }).countDocuments();
 
-    if (!successAnswer) {
-      return next(new ErrorResponse(`Cannot find result answer`, 404));
+    if (successAnswer.length === 0) {
+      return next(new ErrorResponse(404, `Cannot find result answer`));
     }
 
     return res.status(200).json({
