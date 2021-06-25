@@ -24,10 +24,6 @@ module.exports = {
       isCorrect: true,
     }).countDocuments();
 
-    if (successAnswer.length === 0) {
-      return next(new ErrorResponse(404, `Cannot find result answer`));
-    }
-
     return res.status(200).json({
       success: true,
       data: { successAnswer },
