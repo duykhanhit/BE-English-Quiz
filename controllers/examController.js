@@ -20,7 +20,7 @@ module.exports = {
 
     if (!exam) {
       return next(
-        new ErrorResponse(`Cannot find exam with id ${exam_id}`, 404)
+        new ErrorResponse(404, `Cannot find exam with id ${exam_id}`)
       );
     }
 
