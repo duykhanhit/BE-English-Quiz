@@ -21,10 +21,22 @@ module.exports = {
   submitAnswer: asyncHandle(async (req, res, next) => {
     const { result_id, answer_id } = req.body;
 
-    const submitAnswer = await SubmitAnswer.create({
+    let submitAnswer;
+
+    submitAnswer = await SubmitAnswer.findOne({
       result_id,
       answer_id,
     });
+
+    if (!submitAnswer) {
+      submitAnswer = await SubmitAnswer.create({
+        result_id,
+        answer_id,
+      });
+    } else {
+      submitAnswer.answer_id = answer_id;
+      await submitAnswer.save();
+    }
 
     return res.status(201).json({
       success: true,
