@@ -14,6 +14,8 @@ const answerSchema = new mongoose.Schema({
     ref: "question",
     required: true,
   },
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model("answer", answerSchema);

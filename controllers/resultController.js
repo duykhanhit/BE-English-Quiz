@@ -11,10 +11,6 @@ module.exports = {
       result_id,
     });
 
-    if (submitAnswer.length === 0) {
-      return next(new ErrorResponse(404, `Cannot find submit answer`));
-    }
-
     const listAnswerId = submitAnswer.map((value) => value.answer_id);
 
     const successAnswer = await Answer.find({
