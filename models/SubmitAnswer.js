@@ -11,6 +11,8 @@ const submitAnswerSchema = new mongoose.Schema({
     ref: "result",
     required: true,
   },
+},  {
+  timestamps: true
 });
 
 module.exports = mongoose.model("submitanswer", submitAnswerSchema);
