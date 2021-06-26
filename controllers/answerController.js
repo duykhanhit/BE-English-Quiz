@@ -18,6 +18,14 @@ module.exports = {
     });
   }),
 
+  createForAnswer: asyncHandle(async (req, res, next) => {
+    await Answer.create(req.body);
+    
+    return res.status(201).json({
+      success: true
+    })
+  }),
+
   submitAnswer: asyncHandle(async (req, res, next) => {
     const { result_id, answer_id } = req.body;
 

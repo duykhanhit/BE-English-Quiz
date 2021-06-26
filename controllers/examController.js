@@ -16,6 +16,7 @@ module.exports = {
   }),
   getExam: asyncHandle(async (req, res, next) => {
     const exam_id = req.params.id;
+    const { mode } = req.query;
     const exam = await Exam.findById(exam_id);
 
     if (!exam) {
@@ -24,10 +25,14 @@ module.exports = {
       );
     }
 
-    const result = await Result.create({
-      exam_id,
-      user_id: req.user.id,
-    });
+    let result = null;
+
+    if(!mode) {
+      result = await Result.create({
+        exam_id,
+        user_id: req.user.id,
+      });
+    }
 
     const questions = await Question.find({
       exam_id,
@@ -40,9 +45,9 @@ module.exports = {
     });
   }),
   createExam: asyncHandle(async (req, res, next) => {
-    const { name } = req.body;
+    const { name, type } = req.body;
 
-    const exam = await Exam.create({ name });
+    const exam = await Exam.create({ name, type });
 
     res.status(201).json({
       success: true,
