@@ -27,7 +27,7 @@ module.exports = {
 
     let result = null;
 
-    if(!mode) {
+    if (!mode) {
       result = await Result.create({
         exam_id,
         user_id: req.user.id,
@@ -40,7 +40,7 @@ module.exports = {
 
     res.status(200).json({
       success: true,
-      result: result._id,
+      result: result?._id,
       data: questions,
     });
   }),
