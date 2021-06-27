@@ -3,6 +3,7 @@ const ErrorResponse = require("../helpers/ErrorResponse");
 const asyncHandle = require("../middlewares/asyncHandle");
 const sendTokenResponse = require("../helpers/sendTokenResponse");
 const sendMail = require("../helpers/sendMail");
+const path = require("path");
 
 module.exports = {
   // @desc    Register new user
@@ -57,15 +58,42 @@ module.exports = {
   // @route   PUT   /api/auth/update-details
   // @access  private
   updateDetails: asyncHandle(async (req, res, next) => {
-    const fieldsUpdate = {
+    let fieldsUpdate = {
       name: req.body.name,
       email: req.body.email,
       gender: req.body.gender,
-      birthday: req.body.birthday
+      birthday: req.body.birthday,
     };
+
+    for (let key in fieldsUpdate) {
+      if (!fieldsUpdate[key]) {
+        delete fieldsUpdate[key];
+      }
+    }
+
+    const { avatar } = req.files;
+    if (avatar) {
+      if (!avatar.mimetype.startsWith("image")) {
+        return next(new ErrorResponse(400, `Vui lòng thêm một file ảnh!`));
+      }
+
+      avatar.name = `avatar_${req.user._id}${path.parse(avatar.name).ext}`;
+
+      avatar.mv(`public/images/${avatar.name}`, async (err) => {
+        if (err) {
+          console.error(err);
+          return next(new ErrorResponse(400, `Gặp vấn đề khi upload file.`));
+        }
+      });
+      fieldsUpdate = {
+        ...fieldsUpdate,
+        avatar: `/images/${avatar.name}`,
+      };
+    }
+
     const user = await User.findByIdAndUpdate(req.user.id, fieldsUpdate, {
       new: true,
-      runValidators: true,
+      runValidators: false,
     });
 
     res.status(200).json({
@@ -103,7 +131,7 @@ module.exports = {
   // @route   PUT   /api/auth/reset-password/:resetCode
   // @access  private
   resetPassword: asyncHandle(async (req, res, next) => {
-    const resetPasswordCode = req.params.resetCode
+    const resetPasswordCode = req.params.resetCode;
 
     const user = await User.findOne({
       resetPasswordCode,
