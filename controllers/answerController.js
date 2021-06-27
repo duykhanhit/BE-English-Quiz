@@ -19,11 +19,24 @@ module.exports = {
   }),
 
   createForAnswer: asyncHandle(async (req, res, next) => {
-    await Answer.create(req.body);
-    
+    // await Answer.create(req.body);
+    const listID = req.body.map((ans) => ans._id);
+    const answers = await Answer.find({
+      _id: {
+        $in: listID,
+      },
+    });
+
+    answers.forEach((a, i) => {
+      const currentAns = req.body.find((a) => a._id === answers[i].id);
+      a.content = currentAns.content;
+      a.isCorrect = currentAns.isCorrect;
+      a.save();
+    });
+
     return res.status(201).json({
-      success: true
-    })
+      success: true,
+    });
   }),
 
   submitAnswer: asyncHandle(async (req, res, next) => {
