@@ -54,4 +54,19 @@ module.exports = {
       data: exam,
     });
   }),
+  deleteExam: asyncHandle(async (req, res, next) => {
+    const { id } = req.params;
+    const exam = await Exam.findById(id);
+
+    if (!exam) {
+      return next(new ErrorResponse(404, `Cannot find exam with id ${id}`));
+    }
+
+    exam.remove();
+
+    return res.status(200).json({
+      success: true,
+      data: [],
+    });
+  }),
 };

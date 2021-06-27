@@ -10,6 +10,9 @@ router
   .get(protect, examController.getExams)
   .post(protect, examController.createExam);
 
-router.get("/exam/:id", protect, examController.getExam);
+router
+  .route("/exam/:id")
+  .get(protect, examController.getExam)
+  .delete(protect, examController.deleteExam);
 
 module.exports = router;

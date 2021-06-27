@@ -8,6 +8,7 @@ const express = require("express");
 require("colors");
 const path = require("path");
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 
 const router = require("./routers");
 
@@ -16,6 +17,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(fileUpload());
 app.use(express.static(path.join(__dirname, "./public")));
 app.use(cors());
 
