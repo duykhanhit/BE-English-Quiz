@@ -19,8 +19,15 @@ module.exports = {
   }),
 
   createForAnswer: asyncHandle(async (req, res, next) => {
-    // await Answer.create(req.body);
     const listID = req.body.map((ans) => ans._id);
+
+    if (listID.length === 0) {
+      await Answer.create(req.body);
+      return res.status(201).json({
+        success: true,
+      });
+    }
+
     const answers = await Answer.find({
       _id: {
         $in: listID,
