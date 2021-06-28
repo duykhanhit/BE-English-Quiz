@@ -62,6 +62,20 @@ module.exports = {
       return next(new ErrorResponse(404, `Cannot find exam with id ${id}`));
     }
 
+    const quesId = await Question.find({
+      exam_id: id,
+    }).select("_id");
+
+    await Answer.deleteMany({
+      question_id: {
+        $in: quesId,
+      },
+    });
+
+    await Question.deleteMany({
+      exam_id: id,
+    });
+
     exam.remove();
 
     return res.status(200).json({
