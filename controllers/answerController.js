@@ -19,11 +19,8 @@ module.exports = {
   }),
 
   createForAnswer: asyncHandle(async (req, res, next) => {
-    const listID = req.body.map((ans) => {
-      if (ans._id) {
-        return ans._id;
-      }
-    });
+    let listID = req.body.filter((x) => x._id !== undefined);
+    listID = listID.map((ans) => ans._id);
 
     if (listID.length === 0) {
       await Answer.create(req.body);
