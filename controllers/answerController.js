@@ -1,5 +1,6 @@
 const asyncHandle = require("../middlewares/asyncHandle");
 const Answer = require("../models/Answer");
+const Result = require("../models/Result");
 const SubmitAnswer = require("../models/SubmitAnswer");
 
 module.exports = {
@@ -65,6 +66,13 @@ module.exports = {
     } else {
       submitAnswer.answer_id = answer_id;
       await submitAnswer.save();
+    }
+
+    const answer = await Answer.findById(answer_id);
+
+    if (answer.isCorrect) {
+      const result = await Result.findById(result_id);
+      await result.update({ $inc: { countCorrect: 1 } });
     }
 
     return res.status(201).json({
