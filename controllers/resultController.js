@@ -1,28 +1,20 @@
 const ErrorResponse = require("../helpers/ErrorResponse");
 const asyncHandle = require("../middlewares/asyncHandle");
-const Answer = require("../models/Answer");
-const SubmitAnswer = require("../models/SubmitAnswer");
+const Result = require("../models/Result");
 
 module.exports = {
   getResult: asyncHandle(async (req, res, next) => {
     const { result_id } = req.params;
 
-    const submitAnswer = await SubmitAnswer.find({
-      result_id,
-    });
+    const result = await Result.findById(result_id);
 
-    const listAnswerId = submitAnswer.map((value) => value.answer_id);
-
-    const successAnswer = await Answer.find({
-      _id: {
-        $in: listAnswerId,
-      },
-      isCorrect: true,
-    }).countDocuments();
+    if (!result) {
+      return next(new ErrorResponse(404, `Cannot find result.`));
+    }
 
     return res.status(200).json({
       success: true,
-      data: { successAnswer },
+      data: { successAnswer: result.countCorrect },
     });
   }),
 };
