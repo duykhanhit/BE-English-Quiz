@@ -52,13 +52,14 @@ module.exports = {
     const { result_id, answer_id, question_id } = req.body;
 
     let submitAnswer;
-    let answer;
     let preAnswer = "pre";
 
     submitAnswer = await SubmitAnswer.findOne({
       result_id,
       question_id,
     });
+
+    const result = await Result.findById(result_id);
 
     if (!submitAnswer) {
       submitAnswer = await SubmitAnswer.create({
@@ -68,12 +69,19 @@ module.exports = {
       });
     } else {
       preAnswer = await Answer.findById(submitAnswer.answer_id);
-      submitAnswer.answer_id = answer_id;
-      await submitAnswer.save();
+
+      if (!answer_id) {
+        await submitAnswer.delete();
+        if (preAnswer.isCorrect) {
+          await result.update({ $inc: { countCorrect: -1 } });
+        }
+      } else {
+        submitAnswer.answer_id = answer_id;
+        await submitAnswer.save();
+      }
     }
 
-    answer = await Answer.findById(answer_id);
-    const result = await Result.findById(result_id);
+    let answer = await Answer.findById(answer_id);
 
     if (answer.isCorrect) {
       if (preAnswer || preAnswer === "pre") {
