@@ -49,30 +49,44 @@ module.exports = {
   }),
 
   submitAnswer: asyncHandle(async (req, res, next) => {
-    const { result_id, answer_id } = req.body;
+    const { result_id, answer_id, question_id } = req.body;
 
     let submitAnswer;
+    let answer;
+    let preAnswer = "pre";
 
     submitAnswer = await SubmitAnswer.findOne({
       result_id,
-      answer_id,
+      question_id,
     });
 
     if (!submitAnswer) {
       submitAnswer = await SubmitAnswer.create({
         result_id,
         answer_id,
+        question_id,
       });
     } else {
+      preAnswer = await Answer.findById(submitAnswer.answer_id);
       submitAnswer.answer_id = answer_id;
       await submitAnswer.save();
     }
 
-    const answer = await Answer.findById(answer_id);
+    answer = await Answer.findById(answer_id);
+    const result = await Result.findById(result_id);
 
     if (answer.isCorrect) {
-      const result = await Result.findById(result_id);
-      await result.update({ $inc: { countCorrect: 1 } });
+      if (preAnswer || preAnswer === "pre") {
+        if (!preAnswer.isCorrect) {
+          await result.update({ $inc: { countCorrect: 1 } });
+        }
+      }
+    } else {
+      if (preAnswer) {
+        if (preAnswer.isCorrect) {
+          await result.update({ $inc: { countCorrect: -1 } });
+        }
+      }
     }
 
     return res.status(201).json({
