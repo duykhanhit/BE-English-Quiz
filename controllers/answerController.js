@@ -59,7 +59,7 @@ module.exports = {
       question_id,
     });
 
-    if (!submitAnswer && !question_id) {
+    if (!submitAnswer && !answer_id) {
       return res.status(200).json({
         success: true,
         data: "Chưa chọn câu trả lời",
