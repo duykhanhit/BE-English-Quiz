@@ -83,16 +83,18 @@ module.exports = {
 
     let answer = await Answer.findById(answer_id);
 
-    if (answer.isCorrect) {
-      if (preAnswer || preAnswer === "pre") {
-        if (!preAnswer.isCorrect) {
-          await result.update({ $inc: { countCorrect: 1 } });
+    if (answer) {
+      if (answer.isCorrect) {
+        if (preAnswer || preAnswer === "pre") {
+          if (!preAnswer.isCorrect) {
+            await result.update({ $inc: { countCorrect: 1 } });
+          }
         }
-      }
-    } else {
-      if (preAnswer) {
-        if (preAnswer.isCorrect) {
-          await result.update({ $inc: { countCorrect: -1 } });
+      } else {
+        if (preAnswer) {
+          if (preAnswer.isCorrect) {
+            await result.update({ $inc: { countCorrect: -1 } });
+          }
         }
       }
     }
