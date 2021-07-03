@@ -59,6 +59,13 @@ module.exports = {
       question_id,
     });
 
+    if (!submitAnswer && !question_id) {
+      return res.status(200).json({
+        success: true,
+        data: "Chưa chọn câu trả lời",
+      });
+    }
+
     const result = await Result.findById(result_id);
 
     if (!submitAnswer) {
