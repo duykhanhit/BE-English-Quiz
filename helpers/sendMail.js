@@ -10,7 +10,7 @@ const sendMail = async (options) => {
   });
 
   const message = {
-    from: `Admin - ${process.env.USER_EMAIL}`,
+    from: `English Quiz - Quên mật khẩu?`,
     to: options.email,
     subject: options.subject,
     text: options.message,
