@@ -195,9 +195,10 @@ module.exports = {
   }),
 
   verifyCode: asyncHandle(async (req, res, next) => {
-    const { code } = req.body;
+    const { code, email } = req.body;
 
     const user = await User.findOne({
+      email,
       resetPasswordCode: code,
       resetPasswordExpire: { $gt: Date.now() },
     });
