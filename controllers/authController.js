@@ -193,4 +193,23 @@ module.exports = {
       });
     }
   }),
+
+  verifyCode: asyncHandle(async (req, res, next) => {
+    const { code } = req.body;
+
+    const user = await User.findOne({
+      resetPasswordCode: code,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return next(
+        new ErrorResponse(404, `Mã xác thực đã hết hạn hoặc không tồn tại.`)
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+    });
+  }),
 };
