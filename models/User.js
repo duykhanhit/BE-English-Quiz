@@ -29,6 +29,7 @@ const UserSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
+      default: "/images/no-avatar.png",
     },
     birthday: {
       type: Date,
